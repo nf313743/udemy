@@ -1,56 +1,6 @@
 ﻿open System.IO
+open StudentScores
 
-type Student = 
-    {
-        Name:string
-        Id:string
-        MeanScore:float
-        MinScore: float
-        MaxScore:float
-    }
-
-
-module Float = 
-    let tryFromString (s:string) =
-        match System.Double.TryParse(s) with
-        | true, value -> Some value
-        | false, _ -> None
-    
-    let tryFromStringOrValue d s  = 
-        s |> tryFromString |> Option.defaultValue d
-        
-
-module Student =
-    let fromString(s:string) =
-        let elements = s.Split('\t')
-        let name = elements.[0]
-        let id = elements.[1]
-        let scores =
-            elements
-            |> Array.skip 2
-            //|> Array.choose Float.tryFromString
-            |> Array.map (Float.tryFromStringOrValue 40.0)
-        {
-            Name = name
-            Id = id
-            MeanScore = scores |> Array.average
-            MinScore = scores |> Array.min
-            MaxScore = scores |> Array.max
-        }
-
-    let printMeanScore (student) = 
-        printfn "%s\t%s\t%0.1f\t%0.1f\t%0.1f" student.Name student.Id student.MeanScore student.MinScore student.MaxScore
-
-let summarise filePath =
-    let rows = File.ReadAllLines(filePath)
-    let studentCount = rows.Length - 1
-    printfn "Student count %i" studentCount
-    rows 
-    |> Array.skip 1
-    |> Array.map Student.fromString
-    |> Array.sortByDescending(fun x -> x.MeanScore)
-    |> Array.iter Student.printMeanScore
-    
 
 [<EntryPoint>]
 let main argv =
@@ -65,10 +15,8 @@ let main argv =
     let isValidPath someFilePath =
         match someFilePath with
         | Some x -> printfn "Processing %s" x
-                    summarise x
+                    Summary.summarise x
                     0
         | None ->  printfn "Please specify a valid file"; 1
-
-    
-
+        
     argv |> someFilePath |> isValidPath
