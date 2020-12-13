@@ -16,8 +16,8 @@ module Float =
         | true, value -> Some value
         | false, _ -> None
     
-    let tryFromStringOrValue value (s:string) = 
-        s |> tryFromString |> Option.defaultValue value
+    let tryFromStringOrValue d s  = 
+        s |> tryFromString |> Option.defaultValue d
         
 
 module Student =
