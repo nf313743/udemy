@@ -47,3 +47,4 @@ module Student =
             student.MeanScore 
             student.MinScore
             student.MaxScore
+    
