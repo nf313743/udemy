@@ -15,8 +15,21 @@ let main argv =
     let isValidPath someFilePath =
         match someFilePath with
         | Some x -> printfn "Processing %s" x
-                    Summary.summarise x
-                    0
-        | None ->  printfn "Please specify a valid file"; 1
-        
+                    try
+                        Summary.summarise x
+                        0
+                    with
+                    | :? System.FormatException as ex->
+                        printfn "Error: %s" ex.Message
+                        printfn "The file was not in the expected format"
+                        1
+                    | :?  System.IO.IOException as ex->
+                        printfn "Error: %s" ex.Message
+                        printfn "The file is open in another program"
+                        1
+                    | ex -> 
+                        printfn "Error: %s" ex.Message
+                        1
+        | None ->  printfn "Please specify a valid file"; 2
+
     argv |> someFilePath |> isValidPath
