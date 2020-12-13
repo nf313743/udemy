@@ -1,24 +1,44 @@
 ﻿open System.IO
 
-let printMeanScore (row: string) = 
-    let elements = row.Split('\t')
-    let name = elements.[0]
-    let id = elements.[1]
-    let scores =
-        elements
-        |> Array.skip 2
-        |> Array.map float
-    let mean = scores |> Array.average
-    let min = scores |> Array.min
-    let max = scores |> Array.max
+type Student = 
+    {
+        Name:string
+        Id:string
+        MeanScore:float
+        MinScore: float
+        MaxScore:float
+    }
 
-    printfn "%s\t%s\t%0.1f\t%0.1f\t%0.1f" name id mean min max
+
+module Student =
+    let fromString(s:string) =
+        let elements = s.Split('\t')
+        let name = elements.[0]
+        let id = elements.[1]
+        let scores =
+            elements
+            |> Array.skip 2
+            |> Array.map float
+        {
+            Name = name
+            Id = id
+            MeanScore = scores |> Array.average
+            MinScore = scores |> Array.min
+            MaxScore = scores |> Array.max
+        }
+
+    let printMeanScore (student) = 
+        printfn "%s\t%s\t%0.1f\t%0.1f\t%0.1f" student.Name student.Id student.MeanScore student.MinScore student.MaxScore
 
 let summarise filePath =
     let rows = File.ReadAllLines(filePath)
     let studentCount = rows.Length - 1
     printfn "Student count %i" studentCount
-    rows |> Array.skip 1 |> Array.iter printMeanScore
+    rows 
+    |> Array.skip 1
+    |> Array.map Student.fromString
+    |> Array.sortByDescending(fun x -> x.MeanScore)
+    |> Array.iter Student.printMeanScore
     
 
 [<EntryPoint>]
