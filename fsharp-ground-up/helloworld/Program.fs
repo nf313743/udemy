@@ -10,6 +10,16 @@ type Student =
     }
 
 
+module Float = 
+    let tryFromString (s:string) =
+        match System.Double.TryParse(s) with
+        | true, value -> Some value
+        | false, _ -> None
+    
+    let tryFromStringOrValue value (s:string) = 
+        s |> tryFromString |> Option.defaultValue value
+        
+
 module Student =
     let fromString(s:string) =
         let elements = s.Split('\t')
@@ -18,7 +28,8 @@ module Student =
         let scores =
             elements
             |> Array.skip 2
-            |> Array.map float
+            //|> Array.choose Float.tryFromString
+            |> Array.map (Float.tryFromStringOrValue 40.0)
         {
             Name = name
             Id = id
