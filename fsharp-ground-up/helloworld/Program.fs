@@ -32,4 +32,9 @@ let main argv =
                         1
         | None ->  printfn "Please specify a valid file"; 2
 
-    argv |> someFilePath |> isValidPath
+
+    //Section14.ArraySection.calcSum 1 1000
+    Section14.ArraySection.calcSum2 1000
+
+    0
+    

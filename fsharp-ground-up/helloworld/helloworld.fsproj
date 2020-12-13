@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArraySection.fs" />
     <Compile Include="Optional.fs" />
     <Compile Include="Float.fs" />
     <Compile Include="TestResult.fs" />
