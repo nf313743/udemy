@@ -1,40 +1,35 @@
-﻿open System.IO
+﻿open System
+open System.IO
 open StudentScores
-
 
 [<EntryPoint>]
 let main argv =
-    let someFilePath (args:string array) = 
-        match args.Length with
-        | 1 -> if File.Exists(args.[0]) then
-                    Some args.[0]
-               else
-                    None
-        | _ -> None
-
-    let isValidPath someFilePath =
-        match someFilePath with
-        | Some x -> printfn "Processing %s" x
-                    try
-                        Summary.summarise x
-                        0
-                    with
-                    | :? System.FormatException as ex->
-                        printfn "Error: %s" ex.Message
-                        printfn "The file was not in the expected format"
-                        1
-                    | :?  System.IO.IOException as ex->
-                        printfn "Error: %s" ex.Message
-                        printfn "The file is open in another program"
-                        1
-                    | ex -> 
-                        printfn "Error: %s" ex.Message
-                        1
-        | None ->  printfn "Please specify a valid file"; 2
-
-
-    //Section14.ArraySection.calcSum 1 1000
-    Section14.ArraySection.calcSum2 1000
-
-    0
-    
+    if argv.Length = 2 then
+        let schoolCodesFilePath = argv.[0]
+        let studentsFilePath = argv.[1]
+        if not (File.Exists schoolCodesFilePath) then
+            printfn "File not found: %s" schoolCodesFilePath
+            1
+        elif not (File.Exists studentsFilePath) then
+            printfn "File not found: %s" studentsFilePath
+            2
+        else
+            printfn "Processing %s (school codes: %s)"  studentsFilePath schoolCodesFilePath
+            try
+                Summary.summarise schoolCodesFilePath studentsFilePath
+                0
+            with
+            | :? FormatException as e ->
+                printfn "Error: %s" e.Message
+                printf "The file was not in the expected format."
+                3
+            | :? IOException as e ->
+                printfn "Error: %s" e.Message
+                printfn "If the file is open in another program, please close it."
+                4
+            | _ as e ->
+                printfn "Unexpected error: %s" e.Message
+                5
+    else
+        printfn "Please specify a school codes and a students file."
+        6

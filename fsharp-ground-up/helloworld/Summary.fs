@@ -4,7 +4,6 @@ module Summary =
 
     open System.IO
 
-
     let printGroupSummary(surname:string)(students:Student[])=
         printfn "%s" (surname.ToUpperInvariant())
         students
@@ -16,14 +15,16 @@ module Summary =
                 student.MinScore
                 student.MaxScore)
 
-    let summarise filePath =
-        let rows = File.ReadAllLines(filePath)
-        let studentCount = rows.Length - 1
+    let summarise schoolCodesFilePath filePath =
+        let rows = 
+            File.ReadLines filePath
+            |> Seq.cache
+        let studentCount = (rows |> Seq.length ) - 1
         printfn "Student count %i" studentCount
+        let schoolCodes = SchoolCodes.load schoolCodesFilePath
         rows 
-        |> Array.skip 1
-        |> Array.map Student.fromString
-        |> Array.groupBy(fun x-> x.Surname)
-        |> Array.sortBy fst
-        |> Array.map(fun (key, value) -> (key, (value |> Array.sortBy(fun x -> x.GivenName))))
-        |> Array.iter (fun (surname, students) -> printGroupSummary surname students)
+        |> Seq.skip 1
+        |> Seq.map (Student.fromString schoolCodes)
+        |> Seq.sortByDescending(fun x-> x.MeanScore)
+        |> Seq.iter Student.printSummary
+        
