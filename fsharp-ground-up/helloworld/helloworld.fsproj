@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ArraySection.fs" />
+    <Compile Include="Optional.fs" />
+    <Compile Include="Float.fs" />
+    <Compile Include="TestResult.fs" />
+    <Compile Include="SchoolCodes.fs" />
+    <Compile Include="Student.fs" />
+    <Compile Include="Summary.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+</Project>
